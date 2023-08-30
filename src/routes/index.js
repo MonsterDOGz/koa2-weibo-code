@@ -1,3 +1,11 @@
+/*
+ * @Author: MonsterDOG
+ * @Date: 2023-08-23 15:58:00
+ * @LastEditors: MonsterDOG
+ * @LastEditTime: 2023-08-30 14:12:34
+ * @FilePath: \koa2-weibo-code\src\routes\index.js
+ * @Description: 
+ */
 const router = require('koa-router')()
 
 router.get('/', async (ctx, next) => {
@@ -26,8 +34,14 @@ router.get('/', async (ctx, next) => {
 })
 
 router.get('/json', async (ctx, next) => {
+  const session = ctx.session
+  if (session.viewNum === null) {
+    session.viewNum = 0
+  }
+  session.viewNum++
   ctx.body = {
-    title: 'koa2 json'
+    title: 'koa2 json',
+    viewNum: session.viewNum
   }
 })
 
