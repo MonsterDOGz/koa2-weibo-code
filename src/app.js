@@ -1,3 +1,11 @@
+/*
+ * @Author: MonsterDOG
+ * @Date: 2023-08-23 15:58:00
+ * @LastEditors: MonsterDOG
+ * @LastEditTime: 2023-09-05 16:06:02
+ * @FilePath: \koa2-weibo-code\src\app.js
+ * @Description: 
+ */
 const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
@@ -12,7 +20,8 @@ const { REDIS_CONF } = require('./conf/db')
 const { isProd } = require('./utils/env')
 
 const index = require('./routes/index')
-const users = require('./routes/users')
+const userViewRouter = require('./routes/view/user')
+const userApiRouter = require('./routes/api/user')
 const errorViewRouter = require('./routes/view/error')
 
 // error handler
@@ -53,7 +62,8 @@ app.use(session({
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
+app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
 app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods()) // 404 路由注册到最下面
 
 // error-handling
