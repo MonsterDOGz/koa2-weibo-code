@@ -2,7 +2,7 @@
  * @Author: MonsterDOG
  * @Date: 2023-09-05 16:31:19
  * @LastEditors: MonsterDOG
- * @LastEditTime: 2023-09-05 16:31:32
+ * @LastEditTime: 2023-09-05 17:23:51
  * @FilePath: \koa2-weibo-code\src\services\user.js
  * @Description: user services
  */
@@ -16,10 +16,10 @@ const { formatUser } = require('./_format')
  * @param {string} password 密码
  * @return {*}
  */
-async function getUserInfo(username, password) {
+async function getUserInfo(userName, password) {
   // 查询条件
   const whereOpt = {
-    username
+    userName
   }
   if (password) {
     Object.assign(whereOpt, { password })
@@ -27,7 +27,7 @@ async function getUserInfo(username, password) {
   
   // 查询
   const result = await User.findOne({
-    attributes: ['id', 'username', 'nickname', 'picture', 'city'],
+    attributes: ['id', 'userName', 'nickname', 'picture', 'city'],
     where: whereOpt
   })
   if (result == null) {
@@ -41,6 +41,25 @@ async function getUserInfo(username, password) {
   return formatRes
 }
 
+/**
+ * @description: 创建用户
+ * @param {string} userName 用户名
+ * @param {string} password 密码
+ * @param {number} gender 性别(1 男，2 女，3 保密)
+ * @param {string} nickName 昵称
+ * @return {*}
+ */
+async function createUser({ userName, password, gender = 3, nickName }) {
+  const result = await User.create({
+    userName,
+    password,
+    nickName: nickName ? nickName : userName,
+    gender
+  })
+  return result.dataValues
+}
+
 module.exports = {
-  getUserInfo
+  getUserInfo,
+  createUser
 }
